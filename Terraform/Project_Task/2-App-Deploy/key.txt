@@ -1,0 +1,3 @@
+
+
+To create a SSH key with Custom Name:-  ssh-keygen -t rsa -b 4096 -f ~/.ssh/my_terraform

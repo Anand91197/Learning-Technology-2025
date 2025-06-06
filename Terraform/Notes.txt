@@ -1,0 +1,203 @@
+1. If the resource was created manually or not managed in Terraform then need to import the existing resource(S3 bucket) into Terraform state.
+
+Import the bucket into Terraform state: terraform import aws_s3_bucket.my_bucket your-existing-bucket-name
+
+Imported:- terraform import aws_iam_user.my_iam_user test_user_terraform
+
+<<-EOF in Terraform (and Bash)
+The <<-EOF syntax is called a "Here Document" (heredoc) in Bash scripting, and Terraform supports it for multi-line string literals.
+<<EOF or <<-EOF tells the shell (or Terraform) to treat everything that follows as a single multi-line string, until it sees the delimiter EOF again.
+
+Difference between <<EOF and <<-EOF
+<<EOF	Preserves leading whitespace (indentation matters).
+<<-EOF	Strips leading tabs (not spaces) from each line in the string. Useful when you want to indent for readability.
+
+
+#Custom VPC Components:-
+VPC
+
+Subnet
+
+Internet Gateway
+
+Route Table
+
+Security Group
+
+EC2 Instance
+
+Public IP Output
+
+User Data (for HTTP server)
+
+
+
+To ensure your Terraform file content is correct, use the terraform validate command locally, 
+and utilize terraform plan to verify that the configuration will work as expected. 
+You can also use terraform fmt to automatically format your code for readability and consistency. 
+
+terraform validate checks the syntax of your Terraform files and ensures they are valid.
+==
+Here are the complete steps to create an Application Load Balancer (ALB) in Terraform, including:
+
+VPC, Subnets, and Security Groups
+
+Target Group
+
+ALB Listener
+
+Attaching EC2 instances
+
+>Target Group
+>ALB
+>Listener
+>Attach EC2 Instances to Target Group
+>Output ALB DNS
+=
+
+
+#To securely provide AWS credentials (AWS Access Key ID and Secret Access Key) to Terraform via environment variables, follow these steps:
+
+Step 1: Export Environment Variables
+export AWS_ACCESS_KEY_ID="your-access-key-id"
+export AWS_SECRET_ACCESS_KEY="your-secret-access-key"
+export AWS_DEFAULT_REGION="us-east-1"  # Optional: set your default AWS region
+
+Step 2: Verify They're Set
+echo $AWS_ACCESS_KEY_ID
+echo $AWS_SECRET_ACCESS_KEY
+
+Tip: Don’t hardcode credentials in .tf files or commit them to Git.
+
+Optional: Store in .env file and load
+You can put them in a file (e.g., aws.env):
+AWS_ACCESS_KEY_ID=your-access-key-id
+AWS_SECRET_ACCESS_KEY=your-secret-access-key
+AWS_DEFAULT_REGION=us-east-1
+
+Then load it into your session:
+source aws.env
+===
+Option 1: Use AWS Named Profiles (Recommended)
+🔐 Step 1: Configure a Named Profile
+Run the command:
+
+aws configure --profile terraform-user
+You'll be prompted to enter:
+
+AWS Access Key ID
+
+AWS Secret Access Key
+
+Default region
+
+Output format (optional)
+
+This saves your credentials to:
+
+~/.aws/credentials
+~/.aws/config
+
+
+==
+Step 2: Use the Profile in Terraform
+You can:
+
+Set it via environment variable:
+
+
+export AWS_PROFILE=terraform-user
+Or configure the provider block in Terraform:
+
+
+provider "aws" {
+  profile = "terraform-user"
+  region  = "us-east-1"
+}
+
+Option 3: Use AWS Vault (Most secure for CLI)
+AWS Vault securely stores and accesses your AWS credentials using the system keychain.
+
+🛠 Install:
+
+brew install --cask aws-vault
+🧠 Setup a profile:
+
+aws-vault add terraform-user
+Then, run Terraform like this:
+
+
+aws-vault exec terraform-user -- terraform plan
+
+=
+Option 4: Use HashiCorp Vault (for teams or sensitive environments)
+Use Vault to dynamically generate AWS credentials for Terraform.
+
+This requires:
+
+Vault server
+
+AWS secrets engine
+
+Terraform Vault provider
+
+Example config:
+provider "vault" {
+  address = "https://vault.myorg.com"
+}
+
+data "vault_aws_access_credentials" "creds" {
+  backend = "aws"
+  role    = "terraform-role"
+}
+
+
+
+>terraform import
+terraform import lets you link existing infrastructure to your Terraform configuration.
+
+It does not create resources — it maps real infrastructure to your Terraform code.
+
+aws ec2 describe-instances --query 'Reservations[*].Instances[*].InstanceId'
+
+aws iam list-users
+aws s3api list-buckets
+aws ec2 describe-security-groups
+
+
+Import:
+EC2 Instance	terraform import aws_instance.example i-0abcdef1234567890
+S3 Bucket	terraform import aws_s3_bucket.my_bucket my-bucket-name
+IAM User	terraform import aws_iam_user.dev_user dev-user-name
+Security Group	terraform import aws_security_group.web_sg sg-0123456789abcdef0
+
+Important Notes
+Import only updates the state file, not your .tf code.
+
+You must manually write correct Terraform code to match the resource’s configuration.
+
+After import, always run:
+
+terraform plan
+
+==
+Drift Detection:-
+Drift refers to any change made outside Terraform — for example, via:
+
+AWS Console
+
+CLI tools (like aws command)
+
+Scripts or third-party tools
+
+These out-of-band changes mean your real infrastructure no longer matches what's defined in your Terraform code or tracked in its terraform.tfstate.
+
+Terraform detects this drift when you run: terraform plan
+
+terraform plan -detailed-exitcode
+
+| Exit Code | Meaning                                          |
+| --------- | ------------------------------------------------ |
+| `0`       | No changes (no drift)                            |
+| `1`       | Error occurred                                   |
+| `2`       | Changes present (drift detected or code changed) |

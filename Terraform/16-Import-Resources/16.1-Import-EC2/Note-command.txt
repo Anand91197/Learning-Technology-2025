@@ -1,0 +1,35 @@
+
+Find the resource ID in AWS:-
+aws ec2 describe-instances --query 'Reservations[*].Instances[*].InstanceId'
+
+aws iam list-users
+aws s3api list-buckets
+aws ec2 describe-security-groups
+
+
+
+1. Import an Existing EC2 Instance
+Example EC2 Info:-
+EC2 ID: i-0abcdef1234567890
+
+Region: us-east-1
+
+
+Step A: Write Minimal Terraform Code (main.tf)
+Step B: Initialize Terraform
+Step C: Import the EC2 Instance: terraform import aws_instance.my_ec2 i-0abcdef1234567890
+Step D: Refresh Configuration: terraform plan
+
+Update your main.tf to match the actual EC2 settings (AMI ID, key name, tags, etc.).
+//
+
+
+2. Import an Existing S3 Bucket
+Same as it
+
+Important Notes
+Terraform does not auto-generate your .tf config — you write it manually.
+
+After importing, always run terraform plan to ensure no unexpected changes.
+
+Avoid making changes in the AWS console after import to keep things in sync.
