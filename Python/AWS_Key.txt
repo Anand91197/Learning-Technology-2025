@@ -1,0 +1,2 @@
+export AWS_SECRET_ACCESS_KEY="b/83xia2uimH6oh7HgWqyCXJTnBIQBkiUNCpf2Jf"
+export AWS_REGION="us-east-1"

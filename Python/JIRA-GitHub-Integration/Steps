@@ -1,0 +1,39 @@
+
+#Check Project
+1. Created a JIRA account and Project.
+2. Created a API Token from the Security section.
+3. Write a python code to list out Projects (Update:- Domain, API, Email-ID)
+# https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-projects/#api-rest-api-3-project-get
+4. If required then install requests package ( pip install requests)
+5. Now, we are good to run the python code. //
+
+
+Create a JIRA ticket
+1. Create a issue for take a code: https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-rest-api-3-issue-post
+
+2. Update the code, removing unnecessary filed
+3. Get issue ID and update in the code (IssueType: Bug)
+https://testingbyme0011.atlassian.net/jira/software/projects/SCRUM/settings/issuetypes/10002
+
+4. Update the code and now we can execute it.
+
+#GitHub JIRA Integration:
+
+GitHub[Webhook]>>>>>EC2[API/Flask_App]>>>>JIRA
+
+1. Install flask modules (pip install flask )
+2. Write a flask code
+3. Launch EC2 Instance
+4. Copy the code on the EC2 instance and installed python, pip, flask
+5. Run the code to test the script: Public_IP:5000 > Working
+6. Now prepare the code based on JIRA_Create.py code and copy on the EC2 Instance
+7. Run the App from the INstancce
+8. Create a Webhook on the GithUB TAKE PUBLIC DNS of the EC2
+http://ec2-13-233-103-157.ap-south-1.compute.amazonaws.com:5000/createJIRA
+Which events would you like to trigger this webhook?
+Issue comments
+SAVE IT
+9. Create a issue from the GIthub repository with commenting /jira
+10. JIRA is creating on the JIRA Portal
+
+
