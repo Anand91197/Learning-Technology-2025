@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: config-reader-pod
+spec:
+  containers:
+  - name: my-app
+    image: busybox:1.28
+    command: [ "sh", "-c", "echo The message is: $(MESSAGE) and the version is $(APP_VERSION) && sleep 3600" ]
+    env:
+      - name: MESSAGE
+        valueFrom:
+          configMapKeyRef:
+            name: my-app-config # Name of the ConfigMap
+            key: MESSAGE       # Key from the ConfigMap's data
+      - name: APP_VERSION
+        valueFrom:
+          configMapKeyRef:
+            name: my-app-config
+            key: APP_VERSION
+  restartPolicy: Never
+
+
+#Check logs: kubectl logs config-reader-pod
