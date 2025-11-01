@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: file-config
+data:
+  log.level: debug
+  app.properties: |
+    port=8080
+    debug=true

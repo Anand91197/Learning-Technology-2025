@@ -1,0 +1,42 @@
+#httpd-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-deployment 
+  labels:
+    app: httpd           
+spec:
+  replicas: 3 
+  selector:
+    matchLabels:
+      app: httpd  # Pods managed by this Deployment
+  template:
+    metadata:
+      labels:
+        app: httpd     #Pods created by this Deployment
+    spec:
+      containers:
+      - name: httpd-container 
+        image: 91197/httpd_custom:1.0
+        ports:
+        - containerPort: 80  
+
+
+
+---
+# httpd-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpd-service 
+  labels:
+    app: httpd-service 
+spec:
+  selector:
+    app: httpd 
+  ports:
+    - protocol: TCP
+      port: 80         
+      targetPort: 80   
+      nodePort: 30088                     
+  type: NodePort    

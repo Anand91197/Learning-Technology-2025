@@ -1,0 +1,11 @@
+# my-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-app-pvc 
+spec:
+  accessModes:
+    - ReadWriteOnce # Must match with PV
+  resources:
+    requests:
+      storage: 500Mi # Requesting 500 Megabytes of storage

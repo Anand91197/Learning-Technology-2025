@@ -1,0 +1,14 @@
+#Manual Scheduling
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    name: nginx
+spec:
+  nodeName: kube-node-1
+  containers:
+  - name: nginx-container
+    image: nginx
+    ports:
+    - containerPort: 8080

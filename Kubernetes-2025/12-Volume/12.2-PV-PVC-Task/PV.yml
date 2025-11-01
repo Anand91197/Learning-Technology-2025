@@ -1,0 +1,14 @@
+# my-pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+ name: my-hostpath-pv 
+spec:
+ capacity:
+  storage: 1Gi    
+ accessModes:
+  - ReadWriteOnce  
+ persistentVolumeReclaimPolicy: Retain # Retain the volume when PVC is deleted
+ hostPath:
+  path: "/tmp/data/my-app-data" # Path on the host node  
+  type: DirectoryOrCreate    # Directory exists or create 

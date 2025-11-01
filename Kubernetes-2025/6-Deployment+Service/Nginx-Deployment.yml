@@ -1,0 +1,42 @@
+#nginx-deployment.yml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3 # 3 identical Nginx web servers running
+  selector:
+    matchLabels:
+      app: nginx # Connects the Deployment to the Pods
+  template:
+    metadata:
+      labels:
+        app: nginx # Pods created by this Deployment 
+    spec:
+      containers:
+      - name: my-nginx
+        image: 91197/nginx_custom:1.0 # The Docker image 
+        ports:
+        - containerPort: 80 # Nginx listens on port 80 
+
+
+
+---
+# nginx-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx #Connects the Service to the Pods 
+  ports:
+    - protocol: TCP
+      port: 80       # Service will be exposed
+      targetPort: 80 # Service will forward traffic
+  type: NodePort     # Accessible from outside the cluster
+                    
+
+

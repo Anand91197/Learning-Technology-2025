@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: mem-limit-range
+  namespace: default # This LimitRange applies to the 'default' namespace
+spec:
+  limits:
+  - default:
+      cpu: 500m
+      memory: 512Mi
+    defaultRequest:
+      cpu: 200m
+      memory: 256Mi
+    max:
+      cpu: "1"
+      memory: 1Gi
+    min:
+      cpu: 100m
+      memory: 128Mi
+    type: Container # This applies to individual containers
+  - max:
+      cpu: "2"
+      memory: 2Gi
+    type: Pod #The sum of resources across all containers in a Pod

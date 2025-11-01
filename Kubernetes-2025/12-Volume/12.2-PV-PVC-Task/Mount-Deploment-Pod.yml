@@ -1,0 +1,29 @@
+# nginx-with-pv.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-pv-deployment
+  labels:
+    app: nginx-pv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-pv
+  template:
+    metadata:
+      labels:
+        app: nginx-pv
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: persistent-storage  # Name of the volume mount
+          mountPath: /app/data #Inside the container, volume mounted
+      volumes:
+      - name: persistent-storage  #Must match volumeMounts.name
+        persistentVolumeClaim:
+          claimName: my-app-pvc   # <--- Reference to your PVC
