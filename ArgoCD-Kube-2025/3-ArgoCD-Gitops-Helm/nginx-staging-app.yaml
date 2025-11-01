@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-staging
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: 16.0.0 # Use a specific version for stability
+    chart: nginx
+    helm:
+      releaseName: nginx-staging
+      valueFiles:
+        - https://github.com/Testingbyme0011/3-ArgoCD-Gitops-Helm.git/values-staging.yaml 
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: staging
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true

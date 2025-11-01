@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-k8s-argo
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Testingbyme0011/Argocd-gitops-sample-app.git
+    targetRevision: HEAD
+    path: .
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true

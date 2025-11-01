@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: frontend-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Testingbyme0011/4-ArgoCD-Gitops-Multi-Cluster.git
+    targetRevision: HEAD
+    path: frontend
+  destination:
+    server: https://127.0.0.1:36885  # Cluster A (where ArgoCD is running)
+    namespace: default
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true

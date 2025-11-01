@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-dev
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: 16.0.0 # Use a specific version for stability
+    chart: nginx
+    helm:
+      releaseName: nginx-dev
+      valueFiles:
+        - https://github.com/Testingbyme0011/3-ArgoCD-Gitops-Helm.git/values-dev.yaml # Reference the remote file
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true

@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-k8s-dev
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Testingbyme0011/2-ArgoCD-Multi-Env.git
+    targetRevision: HEAD
+    path: Dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
