@@ -1,0 +1,23 @@
+---
+- name: Host static website with nginx
+  hosts: webserver
+  become: yes
+  tasks:
+    - name: Install nginx
+      package:
+        name: nginx
+        state: present
+
+    - name: Ensure nginx is started and enabled
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Copy index.html to nginx root
+      copy:
+        src: files/index.html
+        dest: /usr/share/nginx/html/index.html
+        owner: root
+        group: root
+        mode: '0644'

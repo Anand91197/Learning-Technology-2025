@@ -1,0 +1,23 @@
+---
+- name: Install required system packages (Amazon Linux / CentOS)
+  package:
+    name: docker
+    state: present
+
+- name: Start and enable Docker service
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Pull Docker image
+  community.docker.docker_image:
+    name: "{{ docker_image }}"
+
+- name: Run Docker container
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: "{{ docker_image }}"
+    state: started
+    restart_policy: always
+    published_ports: "{{ container_ports }}"

@@ -1,0 +1,42 @@
+---
+- name: Install Docker and run custom image
+  hosts: web
+  become: yes
+
+  vars:
+    docker_image: 91197/nginx_custom:1.0
+    container_name: my_nginx_container
+
+  tasks:
+    - name: Install required packages (Amazon Linux)
+      package:
+        name:
+          - docker
+        state: present
+
+    - name: Start and enable Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add user to docker group (optional)
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+      when: ansible_user is defined
+
+    - name: Pull Docker image
+      docker_image:
+        name: "{{ docker_image }}"
+        source: pull
+
+    - name: Run container from the image
+      docker_container:
+        name: "{{ container_name }}"
+        image: "{{ docker_image }}"
+        state: started
+        restart_policy: always
+        published_ports:
+          - "80:80"

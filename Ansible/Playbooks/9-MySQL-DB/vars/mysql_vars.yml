@@ -1,0 +1,4 @@
+mysql_root_password: "RootPass123!"
+db_name: "my_db"
+db_user: "ansible_user"
+db_user_pass: "UserPass123!"

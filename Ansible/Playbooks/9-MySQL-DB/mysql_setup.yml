@@ -1,0 +1,58 @@
+---
+- name: Install and configure MySQL with remote access
+  hosts: dbserver
+  become: yes
+  vars_files:
+    - vars/mysql_vars.yml
+
+  tasks:
+    - name: Install MySQL server
+      package:
+        name: mysql-server
+        state: present
+
+    - name: Start and enable MySQL service
+      service:
+        name: mysqld
+        state: started
+        enabled: yes
+
+    - name: Run mysql_secure_installation
+      mysql_secure_installation:
+        login_user: root
+        login_password: ""
+        user: root
+        password: "{{ mysql_root_password }}"
+        remove_anonymous_user: yes
+        disallow_root_login_remotely: no
+        remove_test_db: yes
+        state: present
+
+    - name: Copy my.cnf to allow remote connections
+      template:
+        src: files/my.cnf.j2
+        dest: /etc/my.cnf
+      notify: Restart MySQL
+
+    - name: Create MySQL database
+      community.mysql.mysql_db:
+        name: "{{ db_name }}"
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+
+    - name: Create MySQL user with remote access
+      community.mysql.mysql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_user_pass }}"
+        host: "%"
+        priv: "{{ db_name }}.*:ALL"
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+
+  handlers:
+    - name: Restart MySQL
+      service:
+        name: mysqld
+        state: restarted

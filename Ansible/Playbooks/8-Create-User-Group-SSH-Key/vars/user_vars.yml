@@ -1,0 +1,7 @@
+users:
+  - name: Anand
+    group: DevOps
+  - name: Sunil
+    group: SRE
+
+ssh_pub_key_path: /root/.ssh/master_node.pub

@@ -1,0 +1,10 @@
+---
+- name: distribute SSH key to all hosts
+  hosts: all
+  become: yes
+  tasks:
+    - name: copy key to all hosts
+      authorized_key:
+        user: ec2-user
+        state: present
+        key: "{{ lookup('file', '/root/.ssh/master_node.pub') }}"

@@ -1,0 +1,6 @@
+---
+- name: Setup NGINX with role
+  hosts: web
+  become: yes
+  roles:
+    - nginx

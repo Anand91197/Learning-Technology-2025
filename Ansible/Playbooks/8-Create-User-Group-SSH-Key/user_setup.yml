@@ -1,0 +1,38 @@
+---
+- name: Create specific users with mapped groups and SSH setup
+  hosts: web
+  become: yes
+  vars_files:
+    - vars/user_vars.yml
+
+  tasks:
+    - name: Create groups (unique from users)
+      group:
+        name: "{{ item.group }}"
+        state: present
+      loop: "{{ users | unique(attribute='group') }}"
+
+    - name: Create users and assign group
+      user:
+        name: "{{ item.name }}"
+        group: "{{ item.group }}"
+        shell: /bin/bash
+        state: present
+        create_home: yes
+      loop: "{{ users }}"
+
+    - name: Create .ssh directory for each user
+      file:
+        path: "/home/{{ item.name }}/.ssh"
+        state: directory
+        mode: '0700'
+        owner: "{{ item.name }}"
+        group: "{{ item.group }}"
+      loop: "{{ users }}"
+
+    - name: Add SSH public key for each user
+      authorized_key:
+        user: "{{ item.name }}"
+        state: present
+        key: "{{ lookup('file', ssh_pub_key_path) }}"
+      loop: "{{ users }}"

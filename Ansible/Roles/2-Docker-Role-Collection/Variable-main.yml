@@ -1,0 +1,4 @@
+docker_image: "91197/nginx_custom:1.0"
+container_name: "my_nginx_container"
+container_ports:
+  - "80:80"

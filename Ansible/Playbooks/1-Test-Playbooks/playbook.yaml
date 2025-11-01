@@ -1,0 +1,6 @@
+---
+- hosts: all
+  tasks:
+    - name: Print the message
+      debug:
+        msg: "Hello Anand from Ansible World..!!"

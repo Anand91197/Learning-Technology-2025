@@ -1,0 +1,54 @@
+---
+- name: Install and configure PostgreSQL
+  hosts: dbserver
+  become: yes
+  vars_files:
+    - vars/pg_vars.yml
+
+  tasks:
+    - name: Install PostgreSQL
+      package:
+        name: postgresql-server
+        state: present
+
+    - name: Initialize PostgreSQL database (Amazon Linux/RHEL)
+      shell: "postgresql-setup initdb"
+      args:
+        creates: /var/lib/pgsql/data/PG_VERSION
+
+    - name: Ensure PostgreSQL is running
+      service:
+        name: postgresql
+        state: started
+        enabled: yes
+
+    - name: Update postgresql.conf to allow remote access
+      template:
+        src: templates/postgresql.conf.j2
+        dest: /var/lib/pgsql/data/postgresql.conf
+      notify: Restart PostgreSQL
+
+    - name: Update pg_hba.conf to allow remote login
+      template:
+        src: templates/pg_hba.conf.j2
+        dest: /var/lib/pgsql/data/pg_hba.conf
+      notify: Restart PostgreSQL
+
+    - name: Create PostgreSQL user
+      become_user: postgres
+      postgresql_user:
+        name: "{{ pg_user }}"
+        password: "{{ pg_user_pass }}"
+        role_attr_flags: LOGIN
+
+    - name: Create PostgreSQL database
+      become_user: postgres
+      postgresql_db:
+        name: "{{ pg_db_name }}"
+        owner: "{{ pg_user }}"
+
+  handlers:
+    - name: Restart PostgreSQL
+      service:
+        name: postgresql
+        state: restarted

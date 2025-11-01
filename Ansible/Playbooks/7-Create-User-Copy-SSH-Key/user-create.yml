@@ -1,0 +1,15 @@
+---
+- name: Create User on All Server
+  hosts: web
+  become: yes
+  tasks:
+    - name: Create user nms for monitoring tool Motadata NMS
+      user:
+        name: nms
+        state: present
+        shell: "/bin/bash"
+        createhome: yes
+    - name: "Add authorized key to motadata User"
+      authorized_key:
+        user: nms
+        key: "{{ lookup('file', '/root/.ssh/master_node.pub') }}"

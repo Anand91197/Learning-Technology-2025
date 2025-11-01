@@ -1,0 +1,20 @@
+---
+- name: Install nginx
+  package:
+    name: nginx
+    state: present
+
+- name: Copy custom index.html
+  copy:
+    src: index.html
+    dest: /usr/share/nginx/html/index.html
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart nginx
+
+- name: Start and enable nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes

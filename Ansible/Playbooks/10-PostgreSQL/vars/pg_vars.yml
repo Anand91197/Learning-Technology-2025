@@ -1,0 +1,5 @@
+pg_db_name: my_pg_db
+pg_user: pg_user
+pg_user_pass: strongpgpass
+pg_listen_address: '0.0.0.0'
+pg_port: 5432
